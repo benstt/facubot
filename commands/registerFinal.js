@@ -38,7 +38,7 @@ const registerFinal = async (subject, attachmentURL, interaction) => {
         
         interaction.reply(`Materia ${estructuraDatos.name} y final ${finalEd} creados.`);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         interaction.reply('Hubo un error al registrar el final.');
     }
 }
@@ -59,7 +59,7 @@ module.exports = {
         )
         .addStringOption(option =>
             option.setName('fecha')
-                .setDescription('La fecha del final, en formato AAAA/MM/DD.')    
+                .setDescription('Fecha del final, en formato AAAA/MM/DD.')    
                 .setRequired(false)
         ),
     async execute(interaction) {
@@ -67,8 +67,11 @@ module.exports = {
 
         const subject = getOption('materia')['value'];
         const attachedURL = getOption('archivo')['attachment']['url'];
-        const date = new Date(getOption('fecha')['value']);
-        console.log(date);
+        const dateString = getOption('fecha')['value'] + '/';
+        const date = new Date(dateString).getFullYear();
+        if (!date instanceof Date || isNaN(date)) {
+            throw 'Fecha no válida, ingresá solo el año del final.';
+        }
         // const response = getContentsOfFile(attachedURL);
         // TODO: add file to database
         registerFinal(subject, attachedURL, interaction);

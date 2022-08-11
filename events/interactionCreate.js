@@ -10,8 +10,8 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
-            await interaction.reply({ content: 'Hubo un error al ejecutar el comando. JESUCRISTO', ephemeral: true });
+            console.error(`Error thrown: ${error}`);
+            await interaction.reply({ content: `Hubo un error al ejecutar el comando. ${error}`, ephemeral: true });
         }
     },
 };

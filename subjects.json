@@ -1,0 +1,302 @@
+[
+    {
+        "name": "Arquitectura I",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Sistemas y Organizaciones",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Introducción al Álgebra",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Análisis Matemático Básico",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Introducción a la Programación Imperativa",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Arquitectura II",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Programación Imperativa",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Análisis Matemático Aplicado",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Álgebra y Geometría Analítica",
+        "year": 1,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Inglés Técnico",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Comunicación de Datos",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Introducción a Objetos",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Estructura de Datos",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Química General e Inorgánica",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Física I",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Sistemas Operativos I",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Redes I",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Introducción a la Programación Orientada a Objetos",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Base de Datos 0",
+        "year": 2,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Sistemas de Representación",
+        "year": 2,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Probabilidades y Estadística",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Bases de Datos I",
+        "year": 3,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Física II",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Sistemas Operativos II",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Sistemas Administrativos I",
+        "year": 3,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Introducción a la Base de Datos",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Análisis y Diseño de Sistemas I",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Programación Orientada a Objetos",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Bases de Datos II",
+        "year": 3,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Sistemas Administrativos II",
+        "year": 3,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Base de Datos",
+        "year": 3,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Análisis y Diseño de Sistemas II",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Práctica Profesional y Legislación",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Programación Lógica y Funcional",
+        "year": 3,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Ciencias de la Computación I",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Redes II",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Gestión de Proyectos",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Antropología de la Comunicación I",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Modelos y Simulación",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Análisis Matemático Vectorial",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Sistemas de Información",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Antropología de la Comunicación II",
+        "year": 4,
+        "bachelors": "Ingenieria en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Ciencias de la Computación II",
+        "year": 4,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true,
+        "elective": true
+    },
+    {
+        "name": "Lenguajes de Programación",
+        "year": 4,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true,
+        "elective": true
+    },
+    {
+        "name": "Sistemas Inteligentes",
+        "year": 4,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Práctica Profesional Supervisada (Ingeniería en Informática)",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Tesina (Lic. en Sistemas)",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Investigación Operativa",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Calidad de Software",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Compiladores",
+        "year": 5,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Electrónica Digital",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Economía y Organización de la Empresa",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática | Licenciatura en Sistemas"
+    },
+    {
+        "name": "Complementos de Cálculo",
+        "year": 5,
+        "bachelors": "Ingeniería en Informática",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Métricas de Software",
+        "year": 5,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    },
+    {
+        "name": "Programación Distribuida y Concurrente",
+        "year": 5,
+        "bachelors": "Licenciatura en Sistemas",
+        "bachelorsSpecific": true
+    }
+]
