@@ -297,6 +297,7 @@
         "name": "Programación Distribuida y Concurrente",
         "year": 5,
         "bachelors": "Licenciatura en Sistemas",
-        "bachelorsSpecific": true
+        "bachelorsSpecific": true,
+        "elective": true
     }
 ]

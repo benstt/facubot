@@ -8,6 +8,7 @@ module.exports = {
             allowNull: true,
         },
         fileURL: Sequelize.TEXT,
+        SubjectId: Sequelize.INTEGER,
     },
-    fk: 'Subject'
+    belongsTo: ['Subject'],
 };

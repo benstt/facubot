@@ -5,5 +5,5 @@ module.exports = {
     schema: {
         file: Sequelize.TEXT
     },
-    fk: 'Subject'
+    belongsTo: ['Subject'],
 };

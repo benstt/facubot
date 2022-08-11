@@ -11,5 +11,13 @@ module.exports = {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
-    }
+        // maybe create a model for this
+        bachelors: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        bachelorsSpecific: Sequelize.BOOLEAN,
+        elective: Sequelize.BOOLEAN,
+    },
+    hasMany: ['Final', 'Summary'],
 };

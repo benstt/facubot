@@ -13,8 +13,11 @@ const sequelize = new Sequelize('database', 'user', 'password', {
     storage: 'database.sqlite',
 });
 
+const queryInterface = sequelize.getQueryInterface();
+
 client.commands = new Collection();
 client.models = new Collection();
+client.subjects = new Collection();
 client.sequelize = sequelize;
 
 const eventsPath = path.join(__dirname, 'events');
@@ -59,13 +62,56 @@ for (const file of modelFiles) {
     });
 }
 
-// register foreign keys
+// register relationships
 for (const [_, modelWrapper] of client.models) {
-    if (modelWrapper.fields.hasOwnProperty('fk')) {
-        const foreignKeyName = modelWrapper.fields['fk'];
-        const foreignKey = client.models.get(foreignKeyName).model;
-        modelWrapper.model.hasOne(foreignKey);
+    const fields = modelWrapper.fields;
+    if (fields.hasOwnProperty('hasOne')) {
+        fields['hasOne'].forEach(f => {
+            const model = client.models.get(f).model;
+            modelWrapper.model.hasOne(model);
+        });
     }
+
+    if (fields.hasOwnProperty('hasMany')) {
+        fields['hasMany'].forEach(f => {
+            const model = client.models.get(f).model;
+            modelWrapper.model.hasMany(model);
+        });
+    }
+
+    if (fields.hasOwnProperty('belongsTo')) {
+        fields['belongsTo'].forEach(f => {
+            const model = client.models.get(f).model;
+            modelWrapper.model.hasOne(model);
+        });
+    }
+}
+
+const getDatabaseModel = name => {
+    const models = [...client.models.values()];
+    return models.filter(wrapper => wrapper['fields']['name'] === name)[0].model;
+}
+
+const subjectsData = require('./subjects.json');
+const Subject = getDatabaseModel('Subject');
+const subjectTableExists = queryInterface.tableExists('Subjects');
+
+if (subjectTableExists) {
+    subjectsData.forEach(async s => {
+        // const subjectExists = await Subject.findOne({ where: { year: 1}});
+        // console.log(subjectExists);
+    
+        // const subject = await Subject.create({
+        //     name: s["name"],
+        //     year: s["year"],
+        //     bachelors: s["bachelors"],
+        //     bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
+        //     elective: (s["elective"]) ? true : false,
+        // });
+    
+        // const subjectName = subject.dataValues.name;
+        // client.subjects.set(subjectName, subject);
+    });
 }
 
 client.login(token);

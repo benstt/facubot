@@ -1,5 +1,7 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const stringSimilarity = require("string-similarity");
 const { SlashCommandBuilder } = require('discord.js');
+const { logInfo, logError } = require('../common.js');
 
 const getContentsOfFile = async (file, interaction) => {
     try {
@@ -20,26 +22,51 @@ const getContentsOfFile = async (file, interaction) => {
     }
 }
 
-const registerFinal = async (subject, attachmentURL, interaction) => {
+const RATING_ACCEPTANCE_RATE = 0.4;
+
+const registerFinal = async (subject, attachmentURL, date, interaction) => {
     try {
         const Final = interaction.client.models.get('Final').model;
         const Subject = interaction.client.models.get('Subject').model;
-        const estructuraDatos = await Subject.create({
-            name: "Estructura de Datos",
-            year: 2,
+
+        // get all subjects out of the database
+        const allSubjects = await Subject.findAll();
+        const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
+
+        // convert numbers into roman letters
+        // if the user inputs 'II' it will search for the first match, being 'I',
+        // therefore registering the wrong subject.
+        // it should be enough having I, II and III though.
+        const subjectWithRomanLetters = subject.replace('1', 'I').replace('2', 'II').replace('3', 'III');
+
+        // find the subject wanted out of all subjects
+        const matches = stringSimilarity.findBestMatch(subjectWithRomanLetters.toString(), allSubjectsNames);
+        const nameMatched = matches.bestMatch.target;
+        const matchRating = matches.bestMatch.rating;
+
+        if (matchRating < RATING_ACCEPTANCE_RATE) {
+            throw 'Es difícil saber a qué materia te referís. Por favor, tratá de poner el nombre completo.';
+        }
+
+        const subjectMatched = await Subject.findOne({ where: { name: nameMatched }})
+        const final = await Final.create({
+            date: date || new Date(),
+            fileURL: attachmentURL,
         });
-        const finalEd = await Final.create({
-            date: new Date(),
-            fileURL: attachmentURL
-        });
-        await finalEd.setSubject(estructuraDatos);
-        const materiaFinalEd = await finalEd.getSubject();
-        console.log(`Materia del final: ${materiaFinalEd.name}`);
         
-        interaction.reply(`Materia ${estructuraDatos.name} y final ${finalEd} creados.`);
+        // assign relationships
+        await final.setSubject(subjectMatched);
+        await subjectMatched.addFinal(final);
+        // const allFinals = await Final.findAll();
+        // const asd = [...allFinals];
+        // asd.forEach(f => console.log(f));
+        // const allFinalsFKS = [...allFinals].map(f => f.dataValues.name);
+        
+        console.log(`${logInfo} - Added final for subject ${subjectMatched.name} to the database.`);
+        interaction.reply(`Diganle gracias a ${interaction.user} que agregó un final de ${subjectMatched.name} a la base de datos. 🎉`);
     } catch (error) {
-        console.error(error);
-        interaction.reply('Hubo un error al registrar el final.');
+        console.error(`${logError} - Info: ${error}, command: /registrar_final`);
+        interaction.reply({ content: `Hubo un error al registrar el final, ${interaction.user}: ${error}`, ephemeral: true });
     }
 }
 
@@ -59,24 +86,29 @@ module.exports = {
         )
         .addStringOption(option =>
             option.setName('fecha')
-                .setDescription('Fecha del final, en formato AAAA/MM/DD.')    
+                .setDescription('Año en el que fue tomado el final.')    
                 .setRequired(false)
         ),
     async execute(interaction) {
         const getOption = option => interaction.options.get(option);
 
-        const subject = getOption('materia')['value'];
-        const attachedURL = getOption('archivo')['attachment']['url'];
-        const dateString = getOption('fecha')['value'] + '/';
-        const date = new Date(dateString).getFullYear();
-        if (!date instanceof Date || isNaN(date)) {
-            throw 'Fecha no válida, ingresá solo el año del final.';
+        try {
+            const subject = getOption('materia')['value'];
+            const attachedURL = getOption('archivo')['attachment']['url'];
+
+            let dateString = '0';
+            if (getOption('fecha')) {
+                dateString = getOption('fecha')['value'] + '/';
+            }
+            const date = new Date(dateString);
+            if (!date instanceof Date || isNaN(date)) {
+                throw 'Fecha no válida, ingresá solo el año del final.';
+            }
+    
+            registerFinal(subject, attachedURL, date, interaction);
+        } catch (error) {
+            console.error(`${logError} - Info: ${error}`);
+            throw 'Checkeá que hayas puesto bien todos los campos (y tratá de no usar abreviaciones para las materias!).';
         }
-        // const response = getContentsOfFile(attachedURL);
-        // TODO: add file to database
-        registerFinal(subject, attachedURL, interaction);
-        // response.then(contents => {
-        //     interaction.reply(`Se registra final de la materia ${subject}`);
-        // });
     },
 };
