@@ -20,6 +20,29 @@ const getContentsOfFile = async (file, interaction) => {
     }
 }
 
+const registerFinal = async (subject, attachmentURL, interaction) => {
+    try {
+        const Final = interaction.client.models.get('Final').model;
+        const Subject = interaction.client.models.get('Subject').model;
+        const estructuraDatos = await Subject.create({
+            name: "Estructura de Datos",
+            year: 2,
+        });
+        const finalEd = await Final.create({
+            date: new Date(),
+            fileURL: attachmentURL
+        });
+        await finalEd.setSubject(estructuraDatos);
+        const materiaFinalEd = await finalEd.getSubject();
+        console.log(`Materia del final: ${materiaFinalEd.name}`);
+        
+        interaction.reply(`Materia ${estructuraDatos.name} y final ${finalEd} creados.`);
+    } catch (error) {
+        console.log(error);
+        interaction.reply('Hubo un error al registrar el final.');
+    }
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('registrar_final')
@@ -33,16 +56,24 @@ module.exports = {
             attachment.setName('archivo')
                 .setDescription('El archivo a registrar.')
                 .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('fecha')
+                .setDescription('La fecha del final, en formato AAAA/MM/DD.')    
+                .setRequired(false)
         ),
     async execute(interaction) {
         const getOption = option => interaction.options.get(option);
 
         const subject = getOption('materia')['value'];
         const attachedURL = getOption('archivo')['attachment']['url'];
-        const response = getContentsOfFile(attachedURL);
+        const date = new Date(getOption('fecha')['value']);
+        console.log(date);
+        // const response = getContentsOfFile(attachedURL);
         // TODO: add file to database
-        response.then(contents => {
-            interaction.reply(`Se registra final de la materia ${subject}\nContenidos: ${contents}`);
-        });
+        registerFinal(subject, attachedURL, interaction);
+        // response.then(contents => {
+        //     interaction.reply(`Se registra final de la materia ${subject}`);
+        // });
     },
 };

@@ -47,9 +47,25 @@ for (const file of commandFiles) {
 // get all files under /models
 for (const file of modelFiles) {
     const filePath = path.join(modelsPath, file);
-    const model = require(filePath).register(client);
+    const modelFields = require(filePath);
+    const model = sequelize.define(modelFields.name, modelFields.schema);
 
-    client.models.set(model.name, model);
+    // Store the model itself + a reference to its fields,
+    // consisting of the name + schema (SQL attrs) + optional fields,
+    // like having foreign keys
+    client.models.set(model.name, {
+        model, 
+        fields: modelFields
+    });
+}
+
+// register foreign keys
+for (const [_, modelWrapper] of client.models) {
+    if (modelWrapper.fields.hasOwnProperty('fk')) {
+        const foreignKeyName = modelWrapper.fields['fk'];
+        const foreignKey = client.models.get(foreignKeyName).model;
+        modelWrapper.model.hasOne(foreignKey);
+    }
 }
 
 client.login(token);

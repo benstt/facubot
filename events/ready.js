@@ -3,7 +3,8 @@ module.exports = {
     once: true,
     execute(client) {
         // register every table
-        client.models.forEach(model => model.sync());
+        const allModels = Array.from(client.models.values(), wrapper => wrapper['model']);
+        allModels.forEach(model => model.sync({ force: true }));
         console.log(`Ready! Logged is as ${client.user.tag}`);
     },
 };
