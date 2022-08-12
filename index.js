@@ -95,13 +95,16 @@ const getDatabaseModel = name => {
 const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
 
+// only proceed if the table exists
 queryInterface.tableExists('Subjects').then(async () => {
-    const subjectExists = await Subject.findOne({ where: { year: 1 }});
-    if (subjectExists) {
-        return;
-    }
-
+    // create every subject entry
     subjectsData.forEach(async s => {
+        // check if the subject we want to create exists before trying to create it again
+        const subjectExists = await Subject.findOne({ where: { name: s['name'] }});
+        if (subjectExists) {
+            return;
+        }
+
         const subject = await Subject.create({
             name: s["name"],
             year: s["year"],
