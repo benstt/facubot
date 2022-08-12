@@ -96,6 +96,7 @@ const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
 const subjectTableExists = queryInterface.tableExists('Subjects');
 
+// FIXME: put checks of existance before trying to create the instances
 if (subjectTableExists) {
     subjectsData.forEach(async s => {
         // const subjectExists = await Subject.findOne({ where: { year: 1}});

@@ -1,6 +1,6 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const stringSimilarity = require("string-similarity");
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, bold } = require('discord.js');
 const { logInfo, logError } = require('../common.js');
 
 const getContentsOfFile = async (file, interaction) => {
@@ -47,23 +47,21 @@ const registerFinal = async (subject, attachmentURL, date, interaction) => {
         if (matchRating < RATING_ACCEPTANCE_RATE) {
             throw 'Es difícil saber a qué materia te referís. Por favor, tratá de poner el nombre completo.';
         }
-
+        
+        const uploadUserName = `${interaction.user.username}#${interaction.user.discriminator}`;
         const subjectMatched = await Subject.findOne({ where: { name: nameMatched }})
         const final = await Final.create({
             date: date || new Date(),
             fileURL: attachmentURL,
+            uploadUser: uploadUserName,
         });
         
         // assign relationships
         await final.setSubject(subjectMatched);
         await subjectMatched.addFinal(final);
-        // const allFinals = await Final.findAll();
-        // const asd = [...allFinals];
-        // asd.forEach(f => console.log(f));
-        // const allFinalsFKS = [...allFinals].map(f => f.dataValues.name);
         
         console.log(`${logInfo} - Added final for subject ${subjectMatched.name} to the database.`);
-        interaction.reply(`Diganle gracias a ${interaction.user} que agregó un final de ${subjectMatched.name} a la base de datos. 🎉`);
+        interaction.reply(`Diganle gracias a ${interaction.user} que agregó un final de ${bold(subjectMatched.name)} a la base de datos. 🎉`);
     } catch (error) {
         console.error(`${logError} - Info: ${error}, command: /registrar_final`);
         interaction.reply({ content: `Hubo un error al registrar el final, ${interaction.user}: ${error}`, ephemeral: true });

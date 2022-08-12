@@ -9,6 +9,7 @@ module.exports = {
         },
         fileURL: Sequelize.TEXT,
         SubjectId: Sequelize.INTEGER,
+        uploadUser: Sequelize.STRING,
     },
     belongsTo: ['Subject'],
 };
