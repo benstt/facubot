@@ -89,7 +89,7 @@ for (const [_, modelWrapper] of client.models) {
 
 const getDatabaseModel = name => {
     const models = [...client.models.values()];
-    return models.filter(wrapper => wrapper['fields']['name'] === name)[0].model;
+    return models.find(wrapper => wrapper['fields']['name'] === name).model;
 }
 
 const subjectsData = require('./subjects.json');

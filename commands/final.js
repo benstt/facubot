@@ -1,11 +1,10 @@
-const stringSimilarity = require("string-similarity");
-const { SlashCommandBuilder, inlineCode, bold, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
-const { logInfo, logError } = require('../common.js');
-
-const RATING_ACCEPTANCE_RATE = 0.4;
+const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
+const { logInfo, logError, getSubjectName, getAllRecordsOf } = require('../common.js');
+const { NoFinalsFoundError, NoFinalsFromYearError } = require('../exceptions.js');
+const moment = require('moment');
 
 const getFinalDate = final => {
-    return final.dataValues.date;
+    return moment(final.dataValues.date, 'YYYY-MM-DD');
 }
 
 const getFinalURL = final => {
@@ -16,35 +15,6 @@ const getUserWhoUploaded = final => {
     return final.dataValues.uploadUser;
 }
 
-const getSubjectName = async (subject, interaction) => {
-    const Subject = interaction.client.models.get('Subject').model;
-    
-    const allSubjects = await Subject.findAll();
-    const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
-
-    const subjectWithRomanLetters = subject.replace('1', 'I').replace('2', 'II').replace('3', 'III');
-    const matches = stringSimilarity.findBestMatch(subjectWithRomanLetters.toString(), allSubjectsNames);
-    const nameMatched = matches.bestMatch.target;
-    const matchRating = matches.bestMatch.rating;
-
-    if (matchRating < RATING_ACCEPTANCE_RATE) {
-        throw 'Es difícil saber a qué materia te referís. Por favor, tratá de poner el nombre completo.';
-    }
-    
-    return nameMatched;
-}
-
-const getAllFinalsOf = async (subjectName, interaction) => {
-    const Final = interaction.client.models.get('Final').model;
-    const Subject = interaction.client.models.get('Subject').model;
-
-    const wantedSubject = await Subject.findOne({ where: { name: subjectName } });
-    console.log(`${logInfo} - Requesting final for '${wantedSubject.name}'`);
-    
-    const allFinals = await Final.findAll({ where: { SubjectId: wantedSubject.id }});
-    return allFinals;
-}
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('final')
@@ -53,33 +23,66 @@ module.exports = {
             option.setName('materia')
                 .setDescription('La materia que querés buscar.')    
                 .setRequired(true)
+        )
+        .addStringOption(option => 
+            option.setName('año')
+                .setDescription('El año en el que fue tomado.')
+                .setRequired(false)
         ),
     async execute(interaction) {
-        const subject = interaction.options.get('materia')['value'];
+        const getOption = option => interaction.options.get(option);
+
         try {
+            const subject = getOption('materia')['value'];
+
+            let datePassed = undefined;
+            if (getOption('año')) {
+                const year = getOption('año')['value'];
+                datePassed = moment(year, 'YYYY-MM-DD');
+            }
+
             // TODO: let the user pick what final to choose
             const fullSubjectName = await getSubjectName(subject, interaction);
-            const allMatchedFinals = await getAllFinalsOf(fullSubjectName, interaction);
+            const allMatchedFinals = await getAllRecordsOf('Final', fullSubjectName, interaction);
             if (allMatchedFinals.length == 0) {
-                throw `No se encontró ningún final de ${bold(fullSubjectName)}, por el momento.`
+                throw NoFinalsFoundError(fullSubjectName);
             }
-            // TODO: go for each final and let the user choose what to download
-            // or maybe just list all of them? and let the user choose which one with a param
 
-            // gets a random final!
-            const final = allMatchedFinals[Math.floor(Math.random() * allMatchedFinals.length)];
-            const finalDate = new Date(getFinalDate(final)).getFullYear();
+            // gets a random final as a default!
+            let final = allMatchedFinals[Math.floor(Math.random() * allMatchedFinals.length)];
+            
+            // if the user decided to look for a specific year, search for it
+            if (datePassed) {
+                const getYearOfFinal = final => getFinalDate(final).format('YYYY');
+                const yearPassed = datePassed.format('YYYY');
+                console.log(`${logInfo} - Trying to request a final from ${yearPassed}`);
+
+                finalIndex = allMatchedFinals.findIndex(f => getYearOfFinal(f) == yearPassed);
+
+                if (finalIndex != -1) {
+                    console.log(`${logInfo} - Found final`);
+                    final = allMatchedFinals[finalIndex];
+                } else {
+                    console.log(`${logInfo} - No final found, returning`);
+                    throw NoFinalsFromYearError(yearPassed);
+                }
+            }
+
+            const finalDate = getFinalDate(final).format('YYYY');
             const finalURL = getFinalURL(final);
             const finalUploadUser = getUserWhoUploaded(final);
-            const message = (finalDate < 2010) ?
+            const replyMessage = 
+                (finalDate < 2010) ?
                 `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
+                (datePassed) ?
+                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré este final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar. Este es del ${finalDate}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
             await interaction.reply({
                 files: [{
                     attachment: finalURL,
                 }],
-                content: message,
+                content: replyMessage,
             });
 
             console.log(`${logInfo} - Successfully sent final`);

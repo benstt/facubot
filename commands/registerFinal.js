@@ -2,25 +2,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const stringSimilarity = require("string-similarity");
 const { SlashCommandBuilder, bold } = require('discord.js');
 const { logInfo, logError } = require('../common.js');
-
-const getContentsOfFile = async (file, interaction) => {
-    try {
-        const response = await fetch(file);
-
-        if (!response.ok) {
-            interaction.reply(`Hubo un error al leer el archivo. Mensaje: ${response.statusText}`);
-            return;
-        }
-        
-        // wait for the response
-        const text = await response.text();
-        if (text) {
-            return text;
-        }
-    } catch (err) {
-        throw err;
-    }
-}
+const { InvalidFinalDateError, InvalidFinalFieldError, SubjectGivenNotClearError } = require('../exceptions.js');
 
 const RATING_ACCEPTANCE_RATE = 0.4;
 
@@ -45,7 +27,7 @@ const registerFinal = async (subject, attachmentURL, date, interaction) => {
         const matchRating = matches.bestMatch.rating;
 
         if (matchRating < RATING_ACCEPTANCE_RATE) {
-            throw 'Es difícil saber a qué materia te referís. Por favor, tratá de poner el nombre completo.';
+            throw SubjectGivenNotClearError();
         }
         
         const uploadUserName = `${interaction.user.username}#${interaction.user.discriminator}`;
@@ -100,13 +82,13 @@ module.exports = {
             }
             const date = new Date(dateString);
             if (!date instanceof Date || isNaN(date)) {
-                throw 'Fecha no válida, ingresá solo el año del final.';
+                throw InvalidFinalDateError();
             }
     
             registerFinal(subject, attachedURL, date, interaction);
         } catch (error) {
             console.error(`${logError} - Info: ${error}`);
-            throw 'Checkeá que hayas puesto bien todos los campos (y tratá de no usar abreviaciones para las materias!).';
+            throw InvalidFinalFieldError();
         }
     },
 };
