@@ -94,25 +94,25 @@ const getDatabaseModel = name => {
 
 const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
-const subjectTableExists = queryInterface.tableExists('Subjects');
 
-// FIXME: put checks of existance before trying to create the instances
-if (subjectTableExists) {
+queryInterface.tableExists('Subjects').then(async () => {
+    const subjectExists = await Subject.findOne({ where: { year: 1 }});
+    if (subjectExists) {
+        return;
+    }
+
     subjectsData.forEach(async s => {
-        // const subjectExists = await Subject.findOne({ where: { year: 1}});
-        // console.log(subjectExists);
+        const subject = await Subject.create({
+            name: s["name"],
+            year: s["year"],
+            bachelors: s["bachelors"],
+            bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
+            elective: (s["elective"]) ? true : false,
+        });
     
-        // const subject = await Subject.create({
-        //     name: s["name"],
-        //     year: s["year"],
-        //     bachelors: s["bachelors"],
-        //     bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
-        //     elective: (s["elective"]) ? true : false,
-        // });
-    
-        // const subjectName = subject.dataValues.name;
-        // client.subjects.set(subjectName, subject);
+        const subjectName = subject.dataValues.name;
+        client.subjects.set(subjectName, subject);
     });
-}
+});
 
 client.login(token);

@@ -41,7 +41,6 @@ const getAllFinalsOf = async (subjectName, interaction) => {
     const wantedSubject = await Subject.findOne({ where: { name: subjectName } });
     console.log(`${logInfo} - Requesting final for '${wantedSubject.name}'`);
     
-    // console.log(`${logInfo} - Successfully sent final`);
     const allFinals = await Final.findAll({ where: { SubjectId: wantedSubject.id }});
     return allFinals;
 }
@@ -69,12 +68,13 @@ module.exports = {
                 `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un final de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un final del ${finalDate}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
-            interaction.reply({
+            await interaction.reply({
                 files: [{
                     attachment: finalURL,
                 }],
                 content: message 
             });
+            console.log(`${logInfo} - Successfully sent final`);
         } catch(error) {
             console.error(`${logError} - Info: ${error}, command: /final`);
             interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: ${error}`, ephemeral: true });
