@@ -8,7 +8,7 @@
     "dev": "timeout 3 node .; node ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Benjamín García Roqués <benjamingarciaroques@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@discordjs/rest": "^1.0.1",

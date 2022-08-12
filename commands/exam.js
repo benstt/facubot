@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
 const { logInfo, logError, getSubjectName, getAllRecordsOf } = require('../common.js');
-const { NoFinalsFoundError } = require('../exceptions.js');
+const { NoExamsFoundError } = require('../exceptions.js');
 
 const getExamDate = exam => {
     return exam.dataValues.date;
@@ -30,13 +30,13 @@ module.exports = {
             const fullSubjectName = await getSubjectName(subject, interaction);
             const allMatchedExams = await getAllRecordsOf('Exam', fullSubjectName, interaction);
             if (allMatchedExams.length == 0) {
-                throw NoFinalsFoundError(); 
+                throw NoExamsFoundError(fullSubjectName); 
             }
-
-            const firstEntry = allMatchedExams[0];
-            const examDate = new Date(getExamDate(firstEntry)).getFullYear();
-            const examURL = getExamURL(firstEntry);
-            const examUploadUser = getUserWhoUploaded(firstEntry);
+            
+            const exam = allMatchedExams[Math.floor(Math.random() * allMatchedExams.length)]
+            const examDate = new Date(getExamDate(exam)).getFullYear();
+            const examURL = getExamURL(exam);
+            const examUploadUser = getUserWhoUploaded(exam);
             const message = (examDate < 2010) ?
                 `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un parcial de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un parcial del ${examDate}, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.`;

@@ -1,7 +1,11 @@
 const { bold } = require('discord.js');
 
 const NoFinalsFoundError = subject => {
-    return `No se encontró ningún final de ${bold(subject)}, por el momento.`;
+    return `Por el momento no hay ningún final de ${bold(subject)}. Gracias vuelvas prontos.`;
+}
+
+const NoExamsFoundError = subject => {
+    return `Por el momento no hay ningún parcial de ${bold(subject)}. Gracias vuelvas prontos.`;
 }
 
 const NoFinalsFromYearError = year => {
@@ -22,6 +26,7 @@ const SubjectGivenNotClearError = () => {
 
 module.exports = {
     NoFinalsFoundError,
+    NoExamsFoundError,
     NoFinalsFromYearError,
     InvalidFinalDateError,
     InvalidFinalFieldError,
