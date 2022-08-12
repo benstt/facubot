@@ -19,5 +19,5 @@ module.exports = {
         bachelorsSpecific: Sequelize.BOOLEAN,
         elective: Sequelize.BOOLEAN,
     },
-    hasMany: ['Final', 'Summary'],
+    hasMany: ['Final', 'Summary', 'Exam'],
 };

@@ -3,6 +3,7 @@ const path = require('node:path');
 const Sequelize = require('sequelize');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { token } = require('./config.json');
+const { logInfo } = require('./common.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -17,7 +18,6 @@ const queryInterface = sequelize.getQueryInterface();
 
 client.commands = new Collection();
 client.models = new Collection();
-client.subjects = new Collection();
 client.sequelize = sequelize;
 
 const eventsPath = path.join(__dirname, 'events');
@@ -95,8 +95,12 @@ const getDatabaseModel = name => {
 const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
 
-// only proceed if the table exists
-queryInterface.tableExists('Subjects').then(async () => {
+// FIXME: wait until the table exists.
+// this just waits until it gets a value, but if its false then
+// it wont work
+queryInterface.tableExists('Subjects').then(exists => {
+    if (!exists) return;
+
     // create every subject entry
     subjectsData.forEach(async s => {
         // check if the subject we want to create exists before trying to create it again
@@ -105,17 +109,16 @@ queryInterface.tableExists('Subjects').then(async () => {
             return;
         }
 
-        const subject = await Subject.create({
+        await Subject.create({
             name: s["name"],
             year: s["year"],
             bachelors: s["bachelors"],
             bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
             elective: (s["elective"]) ? true : false,
         });
-    
-        const subjectName = subject.dataValues.name;
-        client.subjects.set(subjectName, subject);
     });
+
+    console.log(`${logInfo} - Successfully registered all subjects`);
 });
 
 client.login(token);

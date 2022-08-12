@@ -1,5 +1,5 @@
 const stringSimilarity = require("string-similarity");
-const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
+const { SlashCommandBuilder, inlineCode, bold, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const { logInfo, logError } = require('../common.js');
 
 const RATING_ACCEPTANCE_RATE = 0.4;
@@ -60,20 +60,28 @@ module.exports = {
             // TODO: let the user pick what final to choose
             const fullSubjectName = await getSubjectName(subject, interaction);
             const allMatchedFinals = await getAllFinalsOf(fullSubjectName, interaction);
-            const firstEntry = allMatchedFinals[0];
-            const finalDate = new Date(getFinalDate(firstEntry)).getFullYear();
-            const finalURL = getFinalURL(firstEntry);
-            const finalUploadUser = getUserWhoUploaded(firstEntry);
+            if (allMatchedFinals.length == 0) {
+                throw `No se encontró ningún final de ${bold(fullSubjectName)}, por el momento.`
+            }
+            // TODO: go for each final and let the user choose what to download
+            // or maybe just list all of them? and let the user choose which one with a param
+
+            // gets a random final!
+            const final = allMatchedFinals[Math.floor(Math.random() * allMatchedFinals.length)];
+            const finalDate = new Date(getFinalDate(final)).getFullYear();
+            const finalURL = getFinalURL(final);
+            const finalUploadUser = getUserWhoUploaded(final);
             const message = (finalDate < 2010) ?
-                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un final de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
-                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un final del ${finalDate}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
+                `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
+                `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar. Este es del ${finalDate}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
             await interaction.reply({
                 files: [{
                     attachment: finalURL,
                 }],
-                content: message 
+                content: message,
             });
+
             console.log(`${logInfo} - Successfully sent final`);
         } catch(error) {
             console.error(`${logError} - Info: ${error}, command: /final`);
