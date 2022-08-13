@@ -11,7 +11,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18'
-      - run: npm ci --prod
+      - run: npm install
       - run: npm test
 
       - name: Tests passed! :)
