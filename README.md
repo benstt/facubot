@@ -16,7 +16,7 @@ npm install
 node .
 ```
 
-Para que el bot loguee correctamente se debe crear un archivo `config.json` especificando `clientId`, `guildId` y `token` (obtenidos al crear el bot en la [seccion de desarrolladores de Discord](https://discord.com/developers/applications).
+Para que el bot loguee correctamente se debe crear un archivo `config.json` especificando `clientId`, `guildId` y `token` (obtenidos al crear el bot en la [seccion de desarrolladores de Discord](https://discord.com/developers/applications)).
 
 ## Roadmap
 - [x] Agregar `/parcial` y `/final`
