@@ -1,22 +1,8 @@
 const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
-const { logInfo, logError, getSubjectName, getAllRecordsOf } = require('../common.js');
+const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils, getYearOfFinal, getAsMoment } = require('../common.js');
 const { NoFinalsFoundError, NoFinalsFromYearError } = require('../exceptions.js');
-const moment = require('moment');
 
-const getFinalDate = final => {
-    return moment(final.dataValues.date, 'YYYY-MM-DD');
-}
-
-const getFinalURL = final => {
-    return final.dataValues.fileURL;
-}
-
-const getUserWhoUploaded = final => {
-    return final.dataValues.uploadUser;
-}
-
-module.exports = {
-    data: new SlashCommandBuilder()
+const commandSchema = new SlashCommandBuilder()
         .setName('final')
         .setDescription('Te da un final de una materia.')
         .addStringOption(option =>
@@ -28,36 +14,39 @@ module.exports = {
             option.setName('año')
                 .setDescription('El año en el que fue tomado.')
                 .setRequired(false)
-        ),
+        );
+
+const getIndexOfFinalFromYear = (year, allFinals) => {
+    const finalFromYear = allFinals.findIndex(f => getYearOfFinal(f) == year);
+    return finalFromYear;
+}
+
+module.exports = {
+    data: commandSchema,
     async execute(interaction) {
-        const getOption = option => interaction.options.get(option);
+        const getValueOf = option => {
+            if (interaction.options.get(option) !== null)
+                return interaction.options.get(option)['value'];
+        };
 
         try {
-            const subject = getOption('materia')['value'];
-
-            let datePassed = undefined;
-            if (getOption('año')) {
-                const year = getOption('año')['value'];
-                datePassed = moment(year, 'YYYY-MM-DD');
-            }
-
-            // TODO: let the user pick what final to choose
+            const subject = getValueOf('materia');
             const fullSubjectName = await getSubjectName(subject, interaction);
             const allMatchedFinals = await getAllRecordsOf('Final', fullSubjectName, interaction);
             if (allMatchedFinals.length == 0) {
                 throw NoFinalsFoundError(fullSubjectName);
             }
+            
+            const date = getAsMoment(getValueOf('año'));
+            const year = (date) ? date.format('YYYY') : undefined;
 
             // gets a random final as a default!
             let final = allMatchedFinals[Math.floor(Math.random() * allMatchedFinals.length)];
-            
-            // if the user decided to look for a specific year, search for it
-            if (datePassed) {
-                const getYearOfFinal = final => getFinalDate(final).format('YYYY');
-                const yearPassed = datePassed.format('YYYY');
-                console.log(`${logInfo} - Trying to request a final from ${yearPassed}`);
 
-                finalIndex = allMatchedFinals.findIndex(f => getYearOfFinal(f) == yearPassed);
+            // if the user decided to look for a specific year, search for it
+            if (year) {
+                console.log(`${logInfo} - Trying to get all finals from ${year}`);
+                finalIndex = getIndexOfFinalFromYear(year, allMatchedFinals);
 
                 if (finalIndex != -1) {
                     console.log(`${logInfo} - Found final`);
@@ -68,15 +57,15 @@ module.exports = {
                 }
             }
 
-            const finalDate = getFinalDate(final).format('YYYY');
-            const finalURL = getFinalURL(final);
-            const finalUploadUser = getUserWhoUploaded(final);
+            const finalYear = recordInfoUtils.getRecordDate(final).format('YYYY');
+            const finalURL = recordInfoUtils.getRecordURL(final);
+            const finalUploadUser = recordInfoUtils.getUserWhoUploaded(final);
             const replyMessage = 
-                (finalDate < 2010) ?
-                `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
+                (finalYear < 2010) ?
+                `${bold(fullSubjectName.toUpperCase())}\nAgarré un final al azar de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 (datePassed) ?
-                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré este final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
-                `${bold(fullSubjectName.toUpperCase())}\n\nAgarré un final al azar. Este es del ${finalDate}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
+                `${bold(fullSubjectName.toUpperCase())}\nEncontré este final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
+                `${bold(fullSubjectName.toUpperCase())}\nAgarré un final al azar. Este es del ${finalYear}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
             await interaction.reply({
                 files: [{
@@ -84,11 +73,12 @@ module.exports = {
                 }],
                 content: replyMessage,
             });
-
+                
             console.log(`${logInfo} - Successfully sent final`);
         } catch(error) {
             console.error(`${logError} - Info: ${error}, command: /final`);
             interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },
+    getIndexOfFinalFromYear,
 };

@@ -1,37 +1,35 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const stringSimilarity = require("string-similarity");
 const { SlashCommandBuilder, bold } = require('discord.js');
-const { logInfo, logError } = require('../common.js');
-const { InvalidFinalDateError, InvalidFinalFieldError, SubjectGivenNotClearError } = require('../exceptions.js');
+const { logInfo, logError, getSubjectName } = require('../common.js');
+const { InvalidFinalDateError, InvalidFieldError } = require('../exceptions.js');
 
-const RATING_ACCEPTANCE_RATE = 0.4;
+const commandSchema = new SlashCommandBuilder()
+        .setName('registrar_final')
+        .setDescription('Registra el final de una materia. El archivo debe ser enviado junto con el mensaje.')
+        .addStringOption(option =>
+            option.setName('materia')
+                .setDescription('La materia que querés buscar.')    
+                .setRequired(true)
+        )
+        .addAttachmentOption(attachment =>
+            attachment.setName('archivo')
+                .setDescription('El archivo a registrar.')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('fecha')
+                .setDescription('Año en el que fue tomado el final.')    
+                .setRequired(false)
+        );
 
+/// Registers a final on the database and asigns relationships with Subjects.
 const registerFinal = async (subject, attachmentURL, date, interaction) => {
     try {
         const Final = interaction.client.models.get('Final').model;
         const Subject = interaction.client.models.get('Subject').model;
-
-        // get all subjects out of the database
-        const allSubjects = await Subject.findAll();
-        const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
-
-        // convert numbers into roman letters
-        // if the user inputs 'II' it will search for the first match, being 'I',
-        // therefore registering the wrong subject.
-        // it should be enough having I, II and III though.
-        const subjectWithRomanLetters = subject.replace('1', 'I').replace('2', 'II').replace('3', 'III');
-
-        // find the subject wanted out of all subjects
-        const matches = stringSimilarity.findBestMatch(subjectWithRomanLetters.toString(), allSubjectsNames);
-        const nameMatched = matches.bestMatch.target;
-        const matchRating = matches.bestMatch.rating;
-
-        if (matchRating < RATING_ACCEPTANCE_RATE) {
-            throw SubjectGivenNotClearError();
-        }
         
+        const subjectName = getSubjectName(subject, interaction);
         const uploadUserName = `${interaction.user.username}#${interaction.user.discriminator}`;
-        const subjectMatched = await Subject.findOne({ where: { name: nameMatched }})
+        const subjectMatched = await Subject.findOne({ where: { name: subjectName }})
         const final = await Final.create({
             date: date || new Date(),
             fileURL: attachmentURL,
@@ -51,24 +49,7 @@ const registerFinal = async (subject, attachmentURL, date, interaction) => {
 }
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('registrar_final')
-        .setDescription('Registra el final de una materia. El archivo debe ser enviado junto con el mensaje.')
-        .addStringOption(option =>
-            option.setName('materia')
-                .setDescription('La materia que querés buscar.')    
-                .setRequired(true)
-        )
-        .addAttachmentOption(attachment =>
-            attachment.setName('archivo')
-                .setDescription('El archivo a registrar.')
-                .setRequired(true)
-        )
-        .addStringOption(option =>
-            option.setName('fecha')
-                .setDescription('Año en el que fue tomado el final.')    
-                .setRequired(false)
-        ),
+    data: commandSchema,
     async execute(interaction) {
         const getOption = option => interaction.options.get(option);
 
@@ -88,7 +69,7 @@ module.exports = {
             registerFinal(subject, attachedURL, date, interaction);
         } catch (error) {
             console.error(`${logError} - Info: ${error}`);
-            throw InvalidFinalFieldError();
+            throw InvalidFieldError();
         }
     },
 };

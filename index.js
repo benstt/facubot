@@ -95,9 +95,6 @@ const getDatabaseModel = name => {
 const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
 
-// FIXME: wait until the table exists.
-// this just waits until it gets a value, but if its false then
-// it wont work
 queryInterface.tableExists('Subjects').then(exists => {
     if (!exists) return;
 
@@ -118,7 +115,7 @@ queryInterface.tableExists('Subjects').then(exists => {
         });
     });
 
-    console.log(`${logInfo} - Successfully registered all subjects`);
+    console.log(`${logInfo} - Successfully initialized database`);
 });
 
 client.login(token);

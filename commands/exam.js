@@ -1,45 +1,35 @@
 const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
-const { logInfo, logError, getSubjectName, getAllRecordsOf } = require('../common.js');
+const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils } = require('../common.js');
 const { NoExamsFoundError } = require('../exceptions.js');
 
-const getExamDate = exam => {
-    return exam.dataValues.date;
-}
-
-const getExamURL = exam => {
-    return exam.dataValues.fileURL;
-}
-
-const getUserWhoUploaded = exam => {
-    return exam.dataValues.uploadUser;
-}
-
-module.exports = {
-    data: new SlashCommandBuilder()
+const commandSchema = new SlashCommandBuilder()
         .setName('parcial')
         .setDescription('Te da un parcial de una materia.')
         .addStringOption(option =>
             option.setName('materia')
                 .setDescription('La materia que querés buscar.')    
                 .setRequired(true)
-        ),
+        );
+
+module.exports = {
+    data: commandSchema,
     async execute(interaction) {
         const subject = interaction.options.get('materia')['value'];
         try {
-            // TODO: let the user pick what exam to choose
             const fullSubjectName = await getSubjectName(subject, interaction);
             const allMatchedExams = await getAllRecordsOf('Exam', fullSubjectName, interaction);
             if (allMatchedExams.length == 0) {
                 throw NoExamsFoundError(fullSubjectName); 
             }
             
+            // get a random exam
             const exam = allMatchedExams[Math.floor(Math.random() * allMatchedExams.length)]
-            const examDate = new Date(getExamDate(exam)).getFullYear();
-            const examURL = getExamURL(exam);
-            const examUploadUser = getUserWhoUploaded(exam);
-            const message = (examDate < 2010) ?
-                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un parcial de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.` :
-                `${bold(fullSubjectName.toUpperCase())}\n\nEncontré un parcial del ${examDate}, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.`;
+            const examYear = recordInfoUtils.getRecordDate(exam).format('YYYY');
+            const examURL = recordInfoUtils.getRecordURL(exam);
+            const examUploadUser = recordInfoUtils.getUserWhoUploaded(exam);
+            const message = (examYear < 2010) ?
+                `${bold(fullSubjectName.toUpperCase())}\nEncontré un parcial de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.` :
+                `${bold(fullSubjectName.toUpperCase())}\nEncontré un parcial del ${examYear}, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.`;
 
             await interaction.reply({
                 files: [{

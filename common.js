@@ -8,17 +8,32 @@ const logError = `ERROR - ${logDate}`;
 
 const RATING_ACCEPTANCE_RATE = 0.4;
 
-const getSubjectName = async (subject, interaction) => {
-    const Subject = interaction.client.models.get('Subject').model;
-    
-    const allSubjects = await Subject.findAll();
-    const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
+/// General utils for records.
+const recordInfoUtils = {
+    getRecordDate(record) {
+        return moment(record.dataValues.date, 'YYYY-MM-DD');
+    },
+    getRecordURL(record) {
+        return record.dataValues.fileURL;
+    },
+    getUserWhoUploaded(record) {
+        return record.dataValues.uploadUser;
+    }
+}
 
-    const subjectWithRomanLetters = subject.replace('1', 'I').replace('2', 'II').replace('3', 'III');
-    const matches = stringSimilarity.findBestMatch(subjectWithRomanLetters.toString(), allSubjectsNames);
+/// Finds matches of a string out of an array of strings,
+/// and fails if the match is not very accurate.
+const findMatch = (wanted, all) => {
+    // convert numbers into roman letters
+    // if the user inputs 'II' it will search for the first match, being 'I',
+    // therefore registering the wrong subject.
+    // it should be enough having I, II and III though.
+    const wantedWithRomanLetters = wanted.replace('1', 'I').replace('2', 'II').replace('3', 'III');
+    const matches = stringSimilarity.findBestMatch(wantedWithRomanLetters.toString(), all);
     const nameMatched = matches.bestMatch.target;
     const matchRating = matches.bestMatch.rating;
 
+    // there was probably a misspelling of the word
     if (matchRating < RATING_ACCEPTANCE_RATE) {
         throw SubjectGivenNotClearError(); 
     }
@@ -26,20 +41,47 @@ const getSubjectName = async (subject, interaction) => {
     return nameMatched;
 }
 
+/// Gets the most accurate match of a string in comparison with
+/// the name of the records in the database.
+const getSubjectName = async (subject, interaction) => {
+    const Subject = interaction.client.models.get('Subject').model;
+    
+    // get all subjects out of the database
+    const allSubjects = await Subject.findAll();
+    const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
+
+    return findMatch(subject, allSubjectsNames);
+}
+
+/// Gets all records of the model passed existing.
 const getAllRecordsOf = async (model, subjectName, interaction) => {
     const Model = interaction.client.models.get(model).model;
     const Subject = interaction.client.models.get('Subject').model;
 
     const wantedSubject = await Subject.findOne({ where: { name: subjectName } });
-    console.log(`${logInfo} - Requesting ${model.toLowerCase()} for '${wantedSubject.name}'`);
+    console.log(`${logInfo} - Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
     
+    // get all the records that are linked to the subject wanted
     const allRecords = await Model.findAll({ where: { SubjectId: wantedSubject.id }});
     return allRecords;
+}
+
+/// Gets the year of a given final.
+const getYearOfFinal = final => recordInfoUtils.getRecordDate(final).format('YYYY');
+
+/// Gets the date given as a moment.
+const getAsMoment = date => {
+    if (!date) return;
+    return moment(date, 'YYYY-MM-DD');
 }
 
 module.exports = {
     logInfo,
     logError,
+    findMatch,
     getSubjectName,
-    getAllRecordsOf
+    getAllRecordsOf,
+    getYearOfFinal,
+    getAsMoment,
+    recordInfoUtils
 };

@@ -16,7 +16,11 @@ const InvalidFinalDateError = () => {
     return 'La fecha no válida, ingresá solo el año del final.';
 }
 
-const InvalidFinalFieldError = () => {
+const InvalidExamDateError = () => {
+    return 'La fecha no válida, ingresá solo el año del final.';
+}
+
+const InvalidFieldError = () => {
     return 'Checkeá que hayas puesto bien todos los campos (y tratá de no usar abreviaciones para las materias!).';
 }
 
@@ -29,7 +33,8 @@ module.exports = {
     NoExamsFoundError,
     NoFinalsFromYearError,
     InvalidFinalDateError,
-    InvalidFinalFieldError,
+    InvalidExamDateError,
+    InvalidFieldError,
     SubjectGivenNotClearError,
 
 }
