@@ -22,8 +22,8 @@ Para que el bot loguee correctamente se debe crear un archivo `config.json` espe
 - [x] Agregar `/parcial` y `/final`
 - [x] Agregar `/registrar_parcial` y `/registrar_final`
 - [ ] Agregar funcionalidad de resúmenes -> `/resumen` y `/registrar_resumen`
-- [ ] Mostrar todos los finales al hacer una query
-- - [ ] Interacción con el usuario con botones
+- [x] Mostrar todos los finales y examenes al hacer una query
+- - ~~[ ] Interacción con el usuario con botones~~
 
 ## Funcionalidades
 Se cuenta con diferentes comandos

@@ -3,7 +3,7 @@ name: Facubot Tests CI
 on: [push, pull_request]
 
 jobs:
-  test:
+  ci-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
