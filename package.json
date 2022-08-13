@@ -5,16 +5,26 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "start": "node index.js",
     "dev": "timeout 3 node .; node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grbenjamin/facubot.git"
   },
   "keywords": [],
   "author": "Benjamín García Roqués <benjamingarciaroques@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grbenjamin/facubot/issues"
+  },
+  "homepage": "https://github.com/grbenjamin/facubot#readme",
   "dependencies": {
     "@discordjs/rest": "^1.0.1",
     "discord.js": "^14.1.2",
     "moment": "^2.29.4",
     "node-fetch": "^2.6.7",
+    "pg": "^8.7.3",
     "sequelize": "^6.21.3",
     "sqlite3": "^5.0.11",
     "string-similarity": "^4.0.4"

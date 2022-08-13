@@ -4,15 +4,34 @@ const Sequelize = require('sequelize');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { token } = require('./config.json');
 const { logInfo } = require('./common.js');
+const subjectsData = require('./subjects.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const sequelize = new Sequelize('database', 'user', 'password', {
-    host: 'localhost',
-    dialect: 'sqlite',
-    logging: false,
-    storage: 'database.sqlite',
+// const sequelize = new Sequelize('database', 'user', 'password', {
+//     host: 'localhost',
+//     dialect: 'sqlite',
+//     logging: false,
+//     storage: 'database.sqlite',
+// });
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialectOptions: {
+        ssl: {
+            // require: true,
+            rejectUnauthorized: false
+        }
+    }
 });
+
+sequelize
+    .authenticate()
+    .then(() => {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
 
 const queryInterface = sequelize.getQueryInterface();
 
@@ -92,7 +111,6 @@ const getDatabaseModel = name => {
     return models.find(wrapper => wrapper['fields']['name'] === name).model;
 }
 
-const subjectsData = require('./subjects.json');
 const Subject = getDatabaseModel('Subject');
 
 queryInterface.tableExists('Subjects').then(exists => {
