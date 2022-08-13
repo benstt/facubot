@@ -9,7 +9,7 @@ Con Docker:
 docker build -t facubot .
 docker run --init -d facubot
 ```
-Con Node.js:
+Con Node.js ^16.4.0:
 ```ubuntu
 sudo apt install sqlite3
 npm install
