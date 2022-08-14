@@ -16,7 +16,7 @@ const commandSchema = new SlashCommandBuilder()
                 .setRequired(true)
         )
         .addStringOption(option =>
-            option.setName('fecha')
+            option.setName('año')
                 .setDescription('Año en el que fue tomado el parcial.')    
                 .setRequired(false)
         );
