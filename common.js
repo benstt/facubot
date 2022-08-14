@@ -64,7 +64,7 @@ const getAllRecordsOf = async (model, subjectName, interaction) => {
     const Subjects = interaction.client.models.get('Subjects').model;
 
     const wantedSubject = await Subjects.findOne({ where: { name: subjectName } });
-    console.log(`${logInfo()} - Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
+    logInfo(`Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
     
     // get all the records that are linked to the subject wanted
     const allRecords = await Model.findAll({ where: { SubjectId: wantedSubject.id }});

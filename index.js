@@ -140,7 +140,7 @@ queryInterface.tableExists('Subjects').then(exists => {
         });
     })
 
-    console.log(`${logInfo} - Successfully initialized database`);
+    logInfo('Successfully initialized database');
 });
 
 client.login(token);
