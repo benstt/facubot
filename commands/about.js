@@ -9,11 +9,11 @@ ${bold('FACUBOT v1.0.0')}
 Este bot sirve para mandar finales/parciales/resúmenes de alguna materia de la facultad. Por ahora, se limita a las materias de las carreras de Lic. en Sistemas (+ analista) e Ing. en Informática.
 
 ${bold('COMANDOS')}:
-- ${inlineCode('/parcial [materia]')}: te devuelve ${bold('un')} parcial al azar de la materia especificada.
+- ${inlineCode('/parcial [materia] [año (opcional)]')}: te devuelve ${bold('un')} parcial al azar de la materia especificada, o uno del año dado.
 - ${inlineCode('/final [materia] [año (opcional)]')}: te devuelve ${bold('un')} final al azar de la materia especificada, o uno del año dado.
-- ${inlineCode('/parciales [materia]')}: te devuelve ${bold('todos')} los parciales encontrados de la materia especificada.
+- ${inlineCode('/parciales [materia] [año (opcional)]')}: te devuelve ${bold('todos')} los parciales encontrados de la materia especificada, o todos del año dado.
 - ${inlineCode('/finales [materia] [año (opcional)]')}: te devuelve ${bold('todos')} los finales encontrados de la materia especificada, o todos del año dado.
-- ${inlineCode('/registrar_parcial [materia] [archivo]')}: registra un parcial en la base de datos.
+- ${inlineCode('/registrar_parcial [materia] [archivo] [año (opcional)]')}: registra un parcial en la base de datos.
 - ${inlineCode('/registrar_final [materia] [archivo] [año (opcional)]')}: registra un final en la base de datos.
 - ${inlineCode('/resumen')}: todavía no está implementado, jeje.
 
