@@ -24,8 +24,13 @@ const getIndexOfExamFromYear = (year, allExams) => {
 module.exports = {
     data: commandSchema,
     async execute(interaction) {
-        const subject = interaction.options.get('materia')['value'];
+        const getValueOf = option => {
+            if (interaction.options.get(option) !== null)
+                return interaction.options.get(option)['value'];
+        };
+
         try {
+            const subject = getValueOf('materia');
             const fullSubjectName = await getSubjectName(subject, interaction);
             const allMatchedExams = await getAllRecordsOf('Exams', fullSubjectName, interaction);
             if (allMatchedExams.length == 0) {
