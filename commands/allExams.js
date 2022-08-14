@@ -22,7 +22,7 @@ module.exports = {
         try {
             const subject = getValueOf('materia');
             const fullSubjectName = await getSubjectName(subject, interaction);
-            const allMatchedExams = await getAllRecordsOf('Exam', fullSubjectName, interaction);
+            const allMatchedExams = await getAllRecordsOf('Exams', fullSubjectName, interaction);
             if (allMatchedExams.length == 0) {
                 throw NoExamsFoundError(fullSubjectName);
             }
@@ -33,7 +33,9 @@ module.exports = {
             });
             
             const replyMessage = `${bold(fullSubjectName.toUpperCase())}\nEncontré ${finals.length} parciales en total. Tenés para rato. :)`;
-            await interaction.reply({
+
+            await interaction.deferReply();
+            await interaction.editReply({
                 files: allFiles,
                 content: replyMessage,
             });

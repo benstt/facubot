@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-    name: 'Summary',
+    name: 'Summaries',
     schema: {
-        file: Sequelize.TEXT
+        fileURL: Sequelize.TEXT,
+        SubjectId: Sequelize.INTEGER,
     },
-    belongsTo: ['Subject'],
+    belongsTo: ['Subjects'],
 };

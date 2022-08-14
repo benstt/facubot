@@ -24,12 +24,12 @@ const commandSchema = new SlashCommandBuilder()
 /// Registers a final on the database and asigns relationships with Subjects.
 const registerFinal = async (subject, attachmentURL, date, interaction) => {
     try {
-        const Final = interaction.client.models.get('Final').model;
-        const Subject = interaction.client.models.get('Subject').model;
+        const Final = interaction.client.models.get('Finals').model;
+        const Subject = interaction.client.models.get('Subjects').model;
         
-        const subjectName = getSubjectName(subject, interaction);
         const uploadUserName = `${interaction.user.username}#${interaction.user.discriminator}`;
-        const subjectMatched = await Subject.findOne({ where: { name: subjectName }})
+        const subjectName = await getSubjectName(subject, interaction);
+        const subjectMatched = await Subject.findOne({ where: { name: subjectName }});
         const final = await Final.create({
             date: date || new Date(),
             fileURL: attachmentURL,
@@ -41,6 +41,8 @@ const registerFinal = async (subject, attachmentURL, date, interaction) => {
         await subjectMatched.addFinal(final);
         
         console.log(`${logInfo} - Added final for subject ${subjectMatched.name} to the database.`);
+
+        // interaction.deferReply();
         interaction.reply(`Diganle gracias a ${interaction.user} que agregó un final de ${bold(subjectMatched.name)} a la base de datos. 🎉`);
     } catch (error) {
         console.error(`${logError} - Info: ${error}, command: /registrar_final`);
@@ -66,7 +68,7 @@ module.exports = {
                 throw InvalidFinalDateError();
             }
     
-            registerFinal(subject, attachedURL, date, interaction);
+            await registerFinal(subject, attachedURL, date, interaction);
         } catch (error) {
             console.error(`${logError} - Info: ${error}`);
             throw InvalidFieldError();

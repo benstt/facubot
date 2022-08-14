@@ -17,7 +17,7 @@ module.exports = {
         const subject = interaction.options.get('materia')['value'];
         try {
             const fullSubjectName = await getSubjectName(subject, interaction);
-            const allMatchedExams = await getAllRecordsOf('Exam', fullSubjectName, interaction);
+            const allMatchedExams = await getAllRecordsOf('Exams', fullSubjectName, interaction);
             if (allMatchedExams.length == 0) {
                 throw NoExamsFoundError(fullSubjectName); 
             }
@@ -31,7 +31,9 @@ module.exports = {
                 `${bold(fullSubjectName.toUpperCase())}\nEncontré un parcial de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\nEncontré un parcial del ${examYear}, ahora ponete a estudiar. Subido por ${inlineCode(examUploadUser)}.`;
 
-            await interaction.reply({
+
+            await interaction.deferReply();
+            await interaction.editReply({
                 files: [{
                     attachment: examURL,
                 }],

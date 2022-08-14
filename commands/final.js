@@ -32,7 +32,7 @@ module.exports = {
         try {
             const subject = getValueOf('materia');
             const fullSubjectName = await getSubjectName(subject, interaction);
-            const allMatchedFinals = await getAllRecordsOf('Final', fullSubjectName, interaction);
+            const allMatchedFinals = await getAllRecordsOf('Finals', fullSubjectName, interaction);
             if (allMatchedFinals.length == 0) {
                 throw NoFinalsFoundError(fullSubjectName);
             }
@@ -67,7 +67,9 @@ module.exports = {
                 `${bold(fullSubjectName.toUpperCase())}\nEncontré este final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\nAgarré un final al azar. Este es del ${finalYear}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
-            await interaction.reply({
+                
+            await interaction.deferReply();
+            await interaction.editReply({
                 files: [{
                     attachment: finalURL,
                 }],
@@ -77,7 +79,7 @@ module.exports = {
             console.log(`${logInfo} - Successfully sent final`);
         } catch(error) {
             console.error(`${logError} - Info: ${error}, command: /final`);
-            interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: ${error}`, ephemeral: true });
+            interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: '${error}'`, ephemeral: true });
         }
     },
     getIndexOfFinalFromYear,

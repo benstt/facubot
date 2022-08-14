@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-    name: 'Exam',
+    name: 'Exams',
     schema: {
         date: {
             type: Sequelize.DATEONLY,
@@ -11,5 +11,5 @@ module.exports = {
         SubjectId: Sequelize.INTEGER,
         uploadUser: Sequelize.STRING,
     },
-    belongsTo: ['Subject'],
+    belongsTo: ['Subjects'],
 };

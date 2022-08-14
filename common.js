@@ -44,10 +44,10 @@ const findMatch = (wanted, all) => {
 /// Gets the most accurate match of a string in comparison with
 /// the name of the records in the database.
 const getSubjectName = async (subject, interaction) => {
-    const Subject = interaction.client.models.get('Subject').model;
+    const Subjects = interaction.client.models.get('Subjects').model;
     
     // get all subjects out of the database
-    const allSubjects = await Subject.findAll();
+    const allSubjects = await Subjects.findAll();
     const allSubjectsNames = [...allSubjects].map(s => s.dataValues.name);
 
     return findMatch(subject, allSubjectsNames);
@@ -56,9 +56,9 @@ const getSubjectName = async (subject, interaction) => {
 /// Gets all records of the model passed existing.
 const getAllRecordsOf = async (model, subjectName, interaction) => {
     const Model = interaction.client.models.get(model).model;
-    const Subject = interaction.client.models.get('Subject').model;
+    const Subjects = interaction.client.models.get('Subjects').model;
 
-    const wantedSubject = await Subject.findOne({ where: { name: subjectName } });
+    const wantedSubject = await Subjects.findOne({ where: { name: subjectName } });
     console.log(`${logInfo} - Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
     
     // get all the records that are linked to the subject wanted

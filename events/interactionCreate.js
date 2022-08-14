@@ -1,3 +1,5 @@
+const { logError } = require('../common.js');
+
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction) {
@@ -10,7 +12,7 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(`Error thrown: ${error}`);
+            console.error(`${logError} - Error thrown: ${error}`);
             await interaction.reply({ content: `Hubo un error al ejecutar el comando. ${error}`, ephemeral: true });
         }
     },

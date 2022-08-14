@@ -32,7 +32,7 @@ module.exports = {
         try {
             const subject = getValueOf('materia');
             const fullSubjectName = await getSubjectName(subject, interaction);
-            const allMatchedFinals = await getAllRecordsOf('Final', fullSubjectName, interaction);
+            const allMatchedFinals = await getAllRecordsOf('Finals', fullSubjectName, interaction);
             if (allMatchedFinals.length == 0) {
                 throw NoFinalsFoundError(fullSubjectName);
             }
@@ -62,7 +62,9 @@ module.exports = {
                 return { attachment: finalURL };
             });
 
-            await interaction.reply({
+            // https://stackoverflow.com/questions/70140476/unknown-interaction-on-all-interactions-discord-js-v13
+            await interaction.deferReply();
+            await interaction.editReply({
                 files: allFiles,
                 content: replyMessage,
             });

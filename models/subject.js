@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-    name: 'Subject',
+    name: 'Subjects',
     schema: {
         name: {
             type: Sequelize.STRING,
@@ -19,5 +19,5 @@ module.exports = {
         bachelorsSpecific: Sequelize.BOOLEAN,
         elective: Sequelize.BOOLEAN,
     },
-    hasMany: ['Final', 'Summary', 'Exam'],
+    hasMany: ['Finals', 'Summaries', 'Exams'],
 };

@@ -24,12 +24,12 @@ const commandSchema = new SlashCommandBuilder()
 /// Registers an exam on the database and asigns relationships with Subjects.
 const registerExam = async (subject, attachmentURL, date, interaction) => {
     try {
-        const Exam = interaction.client.models.get('Exam').model;
-        const Subject = interaction.client.models.get('Subject').model;
+        const Exam = interaction.client.models.get('Exams').model;
+        const Subject = interaction.client.models.get('Subjects').model;
         
-        const subjectName = getSubjectName(subject, interaction);
         const uploadUserName = `${interaction.user.username}#${interaction.user.discriminator}`;
-        const subjectMatched = await Subject.findOne({ where: { name: subjectName }})
+        const subjectName = await getSubjectName(subject, interaction);
+        const subjectMatched = await Subject.findOne({ where: { name: subjectName }});
         const exam = await Exam.create({
             date: date || new Date(),
             fileURL: attachmentURL,
@@ -41,9 +41,10 @@ const registerExam = async (subject, attachmentURL, date, interaction) => {
         await subjectMatched.addExam(exam);
         
         console.log(`${logInfo} - Added exam for subject ${subjectMatched.name} to the database.`);
+
         interaction.reply(`${interaction.user} agregó un parcial de ${bold(subjectMatched.name)} a la base de datos. Gracias! 🥂`);
     } catch (error) {
-        console.error(`${logError} - Info: ${error}, command: /registrar_exam`);
+        console.error(`${logError} - Info: ${error}, command: /registrar_parcial`);
         interaction.reply({ content: `Hubo un error al registrar el parcial, ${interaction.user}: ${error}`, ephemeral: true });
     }
 }

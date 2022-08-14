@@ -8,30 +8,26 @@ const subjectsData = require('./subjects.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-// const sequelize = new Sequelize('database', 'user', 'password', {
-//     host: 'localhost',
-//     dialect: 'sqlite',
-//     logging: false,
-//     storage: 'database.sqlite',
-// });
-
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialectOptions: {
-        ssl: {
-            // require: true,
-            rejectUnauthorized: false
-        }
-    }
-});
-
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
+let sequelize = undefined;
+if (process.env.DB_ENVIRONMENT) {
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: 'postgres',
+        // logging: false,
+        dialectOptions: {
+            ssl: {
+              require: true,
+              rejectUnauthorized: false
+            }
+          }
     });
+} else {
+    sequelize = new Sequelize('database', 'user', 'password', {
+        host: 'localhost',
+        dialect: 'sqlite',
+        logging: false,
+        storage: 'database.sqlite',
+    });
+}
 
 const queryInterface = sequelize.getQueryInterface();
 
@@ -66,7 +62,7 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-// get all files under /models
+// // get all files under /models
 for (const file of modelFiles) {
     const filePath = path.join(modelsPath, file);
     const modelFields = require(filePath);
@@ -81,57 +77,64 @@ for (const file of modelFiles) {
     });
 }
 
-// register relationships
-for (const [_, modelWrapper] of client.models) {
-    const fields = modelWrapper.fields;
-    if (fields.hasOwnProperty('hasOne')) {
-        fields['hasOne'].forEach(f => {
-            const model = client.models.get(f).model;
-            modelWrapper.model.hasOne(model);
-        });
-    }
-
-    if (fields.hasOwnProperty('hasMany')) {
-        fields['hasMany'].forEach(f => {
-            const model = client.models.get(f).model;
-            modelWrapper.model.hasMany(model);
-        });
-    }
-
-    if (fields.hasOwnProperty('belongsTo')) {
-        fields['belongsTo'].forEach(f => {
-            const model = client.models.get(f).model;
-            modelWrapper.model.hasOne(model);
-        });
-    }
-}
-
 const getDatabaseModel = name => {
     const models = [...client.models.values()];
     return models.find(wrapper => wrapper['fields']['name'] === name).model;
 }
 
-const Subject = getDatabaseModel('Subject');
+const registerRelationships = async () => {
+    // register relationships
+    for (const [_, modelWrapper] of client.models) {
+        const fields = modelWrapper.fields;
+        if (fields.hasOwnProperty('hasOne')) {
+            for (const field of fields['hasMany']) {
+                const model = client.models.get(field).model;
+                modelWrapper.model.hasOne(model);
+                await model.sync({ alter: true });
+            }
+        }
 
+        if (fields.hasOwnProperty('hasMany')) {
+            for(const field of fields['hasMany']) {
+                const model = client.models.get(field).model;
+                modelWrapper.model.hasMany(model);
+                await model.sync({ alter: true });
+            }
+        }
+        
+
+        if (fields.hasOwnProperty('belongsTo')) {
+            for (const field of fields['belongsTo']) {
+                const model = client.models.get(field).model;
+                modelWrapper.model.hasOne(model);
+                await model.sync({ alter: true });
+            }
+        }
+    }
+}
+
+const Subjects = getDatabaseModel('Subjects');
 queryInterface.tableExists('Subjects').then(exists => {
     if (!exists) return;
 
-    // create every subject entry
-    subjectsData.forEach(async s => {
-        // check if the subject we want to create exists before trying to create it again
-        const subjectExists = await Subject.findOne({ where: { name: s['name'] }});
-        if (subjectExists) {
-            return;
-        }
+    registerRelationships().then(() => {
+        // create every subject entry
+        subjectsData.forEach(async s => {
+            // check if the subject we want to create exists before trying to create it again
+            const subjectExists = await Subjects.findOne({ where: { name: s['name'] }});
+            if (subjectExists) {
+                return;
+            }
 
-        await Subject.create({
-            name: s["name"],
-            year: s["year"],
-            bachelors: s["bachelors"],
-            bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
-            elective: (s["elective"]) ? true : false,
+            await Subjects.create({
+                name: s["name"],
+                year: s["year"],
+                bachelors: s["bachelors"],
+                bachelorsSpecific: (s["bachelorsSpecific"]) ? true : false,
+                elective: (s["elective"]) ? true : false,
+            });
         });
-    });
+    })
 
     console.log(`${logInfo} - Successfully initialized database`);
 });
