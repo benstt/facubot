@@ -4,9 +4,9 @@ const Sequelize = require('sequelize');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { logInfo } = require('./common.js');
 const subjectsData = require('./subjects.json');
-let { token } = require('./config.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+let token = '';
 
 let sequelize = undefined;
 if (process.env.DB_ENVIRONMENT) {
@@ -29,6 +29,8 @@ if (process.env.DB_ENVIRONMENT) {
         logging: false,
         storage: 'database.sqlite',
     });
+
+    token = require('./config.json')['token'];
 }
 
 const queryInterface = sequelize.getQueryInterface();

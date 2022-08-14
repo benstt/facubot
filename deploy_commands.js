@@ -2,12 +2,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
-let { clientId, guildId, token } = require('./config.json');
 
+let clientId = '', guildId = '', token = '';
 if (process.env.DB_ENVIRONMENT) {
 	clientId = process.env.DISCORD_CLIENT_ID;
 	guildId = process.env.DISCORD_GUILD_ID;
 	token = process.env.DISCORD_TOKEN;
+} else {
+	clientId = require('./config.json')['clientId'];
+	guildId = require('./config.json')['guildId'];
+	token = require('./config.json')['token'];
 }
 
 const commands = [];
