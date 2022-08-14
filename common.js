@@ -66,8 +66,8 @@ const getAllRecordsOf = async (model, subjectName, interaction) => {
     return allRecords;
 }
 
-/// Gets the year of a given final.
-const getYearOfFinal = final => recordInfoUtils.getRecordDate(final).format('YYYY');
+/// Gets the year of a given record.
+const getYearOfRecord = record => recordInfoUtils.getRecordDate(record).format('YYYY');
 
 /// Gets the date given as a moment.
 const getAsMoment = date => {
@@ -81,7 +81,7 @@ module.exports = {
     findMatch,
     getSubjectName,
     getAllRecordsOf,
-    getYearOfFinal,
+    getYearOfRecord,
     getAsMoment,
     recordInfoUtils
 };

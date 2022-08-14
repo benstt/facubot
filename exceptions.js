@@ -12,6 +12,10 @@ const NoFinalsFromYearError = year => {
     return `No encontré ningún final del ${bold(year)}, perdón!`;
 }
 
+const NoExamsFromYearError = year => {
+    return `No encontré ningún parcial del ${bold(year)}, perdón!`;
+}
+
 const InvalidFinalDateError = () => {
     return 'La fecha no válida, ingresá solo el año del final.';
 }
@@ -32,6 +36,7 @@ module.exports = {
     NoFinalsFoundError,
     NoExamsFoundError,
     NoFinalsFromYearError,
+    NoExamsFromYearError,
     InvalidFinalDateError,
     InvalidExamDateError,
     InvalidFieldError,

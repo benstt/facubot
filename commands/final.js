@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, inlineCode, bold } = require('discord.js');
-const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils, getYearOfFinal, getAsMoment } = require('../common.js');
+const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils, getYearOfRecord, getAsMoment } = require('../common.js');
 const { NoFinalsFoundError, NoFinalsFromYearError } = require('../exceptions.js');
 
 const commandSchema = new SlashCommandBuilder()
@@ -17,7 +17,7 @@ const commandSchema = new SlashCommandBuilder()
         );
 
 const getIndexOfFinalFromYear = (year, allFinals) => {
-    const finalFromYear = allFinals.findIndex(f => getYearOfFinal(f) == year);
+    const finalFromYear = allFinals.findIndex(f => getYearOfRecord(f) == year);
     return finalFromYear;
 }
 
@@ -45,7 +45,7 @@ module.exports = {
 
             // if the user decided to look for a specific year, search for it
             if (year) {
-                console.log(`${logInfo} - Trying to get all finals from ${year}`);
+                console.log(`${logInfo} - Trying to get a final from ${year}`);
                 finalIndex = getIndexOfFinalFromYear(year, allMatchedFinals);
 
                 if (finalIndex != -1) {
@@ -53,7 +53,7 @@ module.exports = {
                     final = allMatchedFinals[finalIndex];
                 } else {
                     console.log(`${logInfo} - No final found, returning`);
-                    throw NoFinalsFromYearError(yearPassed);
+                    throw NoFinalsFromYearError(year);
                 }
             }
 
@@ -61,10 +61,10 @@ module.exports = {
             const finalURL = recordInfoUtils.getRecordURL(final);
             const finalUploadUser = recordInfoUtils.getUserWhoUploaded(final);
             const replyMessage = 
+                (year) ?
+                `${bold(fullSubjectName.toUpperCase())}\nEncontré un final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 (finalYear < 2010) ?
                 `${bold(fullSubjectName.toUpperCase())}\nAgarré un final al azar de andá a saber cuándo, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
-                (datePassed) ?
-                `${bold(fullSubjectName.toUpperCase())}\nEncontré este final del ${bold(datePassed.format('YYYY'))}! Ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.` :
                 `${bold(fullSubjectName.toUpperCase())}\nAgarré un final al azar. Este es del ${finalYear}, ahora ponete a estudiar. Subido por ${inlineCode(finalUploadUser)}.`;
 
                 

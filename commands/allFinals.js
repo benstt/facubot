@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, bold } = require('discord.js');
-const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils, getYearOfFinal, getAsMoment } = require('../common.js');
+const { logInfo, logError, getSubjectName, getAllRecordsOf, recordInfoUtils, getYearOfRecord, getAsMoment } = require('../common.js');
 const { NoFinalsFoundError, NoFinalsFromYearError } = require('../exceptions.js');
 
 const commandSchema = new SlashCommandBuilder()
@@ -17,7 +17,7 @@ const commandSchema = new SlashCommandBuilder()
         );
 
 const getFinalsFromYear = (year, allFinals) => {
-    const allFinalsFromYear = allFinals.filter(f => getYearOfFinal(f) == year) || [];
+    const allFinalsFromYear = allFinals.filter(f => getYearOfRecord(f) == year) || [];
     return allFinalsFromYear;
 }
 
