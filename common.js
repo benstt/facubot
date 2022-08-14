@@ -2,9 +2,9 @@ const moment = require("moment");
 const stringSimilarity = require("string-similarity");
 const { SubjectGivenNotClearError } = require('./exceptions.js');
 
-const logDate = moment().format();
-const logInfo = `INFO - ${logDate}`;
-const logError = `ERROR - ${logDate}`;
+const getDate = () => moment().format();
+const logInfo = `INFO - ${getDate()}`;
+const logError = `ERROR - ${getDate()}`;
 
 const RATING_ACCEPTANCE_RATE = 0.4;
 
