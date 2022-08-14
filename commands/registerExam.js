@@ -40,11 +40,11 @@ const registerExam = async (subject, attachmentURL, date, interaction) => {
         await exam.setSubject(subjectMatched);
         await subjectMatched.addExam(exam);
         
-        console.log(`${logInfo} - Added exam for subject ${subjectMatched.name} to the database.`);
+        logInfo(`Added exam for subject ${subjectMatched.name} to the database.`);
 
         interaction.reply(`${interaction.user} agregó un parcial de ${bold(subjectMatched.name)} a la base de datos. Gracias! 🥂`);
     } catch (error) {
-        console.error(`${logError} - Info: ${error}, command: /registrar_parcial`);
+        logError(`Info: ${error}, command: /registrar_parcial`);
         interaction.reply({ content: `Hubo un error al registrar el parcial, ${interaction.user}: ${error}`, ephemeral: true });
     }
 }
@@ -69,7 +69,7 @@ module.exports = {
     
             registerExam(subject, attachedURL, date, interaction);
         } catch (error) {
-            console.error(`${logError} - Info: '${error}'`);
+            logError(`Info: '${error}'`);
             throw InvalidFieldError(); 
         }
     },

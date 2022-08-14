@@ -44,10 +44,10 @@ module.exports = {
 
             // if the user decided to look for a specific year, search for it and get all its finals
             if (year) {
-                console.log(`${logInfo} - Trying to get all finals from ${year}`);
+                logInfo(`Trying to get all finals from ${year}`);
                 finals = getFinalsFromYear(year, allMatchedFinals);
                 if (finals.length == 0) {
-                    console.log(`${logInfo} - No finals found from ${year}, returning`);
+                    logInfo(`No finals found from ${year}, returning`);
                     throw NoFinalsFromYearError(year);
                 }
             }
@@ -69,9 +69,9 @@ module.exports = {
                 content: replyMessage,
             });
                 
-            console.log(`${logInfo} - Successfully sent ${finals.length} finals`);
+            logInfo(`Successfully sent ${finals.length} finals`);
         } catch(error) {
-            console.error(`${logError} - Info: '${error}', command: /finales`);
+            logError(`Info: '${error}', command: /finales`);
             interaction.reply({ content: `Hubo un error al buscar los finales, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },

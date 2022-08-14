@@ -45,14 +45,14 @@ module.exports = {
 
             // if the user decided to look for a specific year, search for it
             if (year) {
-                console.log(`${logInfo} - Trying to get a final from ${year}`);
+                logInfo(`Trying to get a final from ${year}`);
                 finalIndex = getIndexOfFinalFromYear(year, allMatchedFinals);
 
                 if (finalIndex != -1) {
-                    console.log(`${logInfo} - Found final`);
+                    logInfo('Found final');
                     final = allMatchedFinals[finalIndex];
                 } else {
-                    console.log(`${logInfo} - No final found, returning`);
+                    logInfo('No final found, returning');
                     throw NoFinalsFromYearError(year);
                 }
             }
@@ -76,9 +76,9 @@ module.exports = {
                 content: replyMessage,
             });
                 
-            console.log(`${logInfo} - Successfully sent final`);
+            logInfo('Successfully sent final');
         } catch(error) {
-            console.error(`${logError} - Info: '${error}', command: /final`);
+            logError(`Info: '${error}', command: /final`);
             interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },

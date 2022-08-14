@@ -45,14 +45,14 @@ module.exports = {
 
             // if the user decided to look for a specific year, search for it
             if (year) {
-                console.log(`${logInfo} - Trying to get an exam from ${year}`);
+                logInfo(`Trying to get an exam from ${year}`);
                 examIndex = getIndexOfExamFromYear(year, allMatchedExams);
 
                 if (examIndex != -1) {
-                    console.log(`${logInfo} - Found exam`);
+                    logInfo('Found exam');
                     exam = allMatchedExams[examIndex];
                 } else {
-                    console.log(`${logInfo} - No exam found, returning`);
+                    logInfo('No exam found, returning');
                     throw NoExamsFromYearError(year);
                 }
             }
@@ -74,9 +74,9 @@ module.exports = {
                 }],
                 content: message 
             });
-            console.log(`${logInfo} - Successfully sent exam`);
+            logInfo('Successfully sent exam');
         } catch(error) {
-            console.error(`${logError} - Info: '${error}', command: /parcial`);
+            logError(`Info: '${error}', command: /parcial`);
             interaction.reply({ content: `Hubo un error al buscar un parcial, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },

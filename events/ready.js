@@ -7,6 +7,6 @@ module.exports = {
         // register every table
         const allModels = Array.from(client.models.values(), wrapper => wrapper['model']);
         allModels.forEach(model => model.sync());
-        console.log(`${logInfo} - Ready! Logged is as ${client.user.tag}`);
+        logInfo(`Ready! Logged is as ${client.user.tag}`);
     },
 };

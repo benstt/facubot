@@ -12,7 +12,7 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(`${logError} - Error thrown: '${error}'`);
+            logError(`Error thrown: '${error}'`);
             await interaction.reply({ content: `Hubo un error al ejecutar el comando. ${error}`, ephemeral: true });
         }
     },

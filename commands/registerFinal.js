@@ -40,12 +40,12 @@ const registerFinal = async (subject, attachmentURL, date, interaction) => {
         await final.setSubject(subjectMatched);
         await subjectMatched.addFinal(final);
         
-        console.log(`${logInfo} - Added final for subject ${subjectMatched.name} to the database.`);
+        logInfo(`Added final for subject ${subjectMatched.name} to the database.`);
 
         // interaction.deferReply();
         interaction.reply(`Diganle gracias a ${interaction.user} que agregó un final de ${bold(subjectMatched.name)} a la base de datos. 🎉`);
     } catch (error) {
-        console.error(`${logError} - Info: ${error}, command: /registrar_final`);
+        logError(`Info: ${error}, command: /registrar_final`);
         interaction.reply({ content: `Hubo un error al registrar el final, ${interaction.user}: ${error}`, ephemeral: true });
     }
 }
@@ -70,7 +70,7 @@ module.exports = {
     
             await registerFinal(subject, attachedURL, date, interaction);
         } catch (error) {
-            console.error(`${logError} - Info: '${error}'`);
+            logError(`Info: '${error}'`);
             throw InvalidFieldError();
         }
     },

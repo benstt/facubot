@@ -3,8 +3,13 @@ const stringSimilarity = require("string-similarity");
 const { SubjectGivenNotClearError } = require('./exceptions.js');
 
 const getDate = () => moment().format();
-const logInfo = `INFO - ${getDate()}`;
-const logError = `ERROR - ${getDate()}`;
+const logInfo = message => {
+    console.log(`INFO - ${getDate()} - ${message}`);
+}
+
+const logError = message => {
+    console.error(`ERROR - ${getDate()} - ${message}`);
+}
 
 const RATING_ACCEPTANCE_RATE = 0.4;
 
@@ -59,7 +64,7 @@ const getAllRecordsOf = async (model, subjectName, interaction) => {
     const Subjects = interaction.client.models.get('Subjects').model;
 
     const wantedSubject = await Subjects.findOne({ where: { name: subjectName } });
-    console.log(`${logInfo} - Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
+    console.log(`${logInfo()} - Requesting ${model.toLowerCase()}(s) for '${wantedSubject.name}'`);
     
     // get all the records that are linked to the subject wanted
     const allRecords = await Model.findAll({ where: { SubjectId: wantedSubject.id }});
