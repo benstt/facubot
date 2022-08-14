@@ -28,11 +28,11 @@ module.exports = {
             }
 
             const allFiles = allMatchedExams.map(final => {
-                const finalURL = recordInfoUtils.getRecordURL(final);
-                return { attachment: finalURL };
+                const examURL = recordInfoUtils.getRecordURL(final);
+                return { attachment: examURL };
             });
             
-            const replyMessage = `${bold(fullSubjectName.toUpperCase())}\nEncontré ${finals.length} parciales en total. Tenés para rato. :)`;
+            const replyMessage = `${bold(fullSubjectName.toUpperCase())}\nEncontré ${allMatchedExams.length} parciales en total. Tenés para rato. :)`;
 
             await interaction.deferReply();
             await interaction.editReply({
