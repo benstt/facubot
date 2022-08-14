@@ -40,7 +40,7 @@ Se cuenta con diferentes comandos
 
 ## Modelo general
 * Todas las materias se guardan en la base de datos, cosa que cuando se quiera agregar un archivo simplemente se pasa un nombre y el sistema automáticamente determinará de qué registro se habla.
-* Los archivos no se guardan como tal, sino que se guarda el URL perteneciente al CDN de Discord que contiene el archivo. De esta manera nos ahorramos espacio en la BD. Al ser archivos livianos (usualmente PDFs, DOCs, GZIP), no hay deterioro del coste de ejecución buscar y enviar el archivo.
+* Los archivos no se guardan como tal, sino que se guarda el URL perteneciente al CDN de Discord que contiene el archivo. De esta manera nos ahorramos espacio en la BD. Al ser archivos livianos (usualmente PDFs, DOCs, GZIP), no hay deterioro del coste de ejecución al buscar y enviar el archivo.
 
 ## Cómo expandirlo
 Dependiendo de lo que se quiera agregar, se deberán crear archivos dentro de `commands`, `events` y `models` para comandos, eventos y tablas, respectivamente. \
