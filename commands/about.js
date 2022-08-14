@@ -20,7 +20,7 @@ ${bold('COMANDOS')}:
 Por favor ${bold('traten de limitarse a subir archivos PDF, DOCx, RARs, etc.')} que tengan que ver con la facultad y no sean muy pesados. Tengan en cuenta que ${bold('cualquier persona en el servidor')} puede subir archivos; el bot no es muy facil de mantener y es un quilombo tener que ir borrando archivos uno por uno en la BD en caso de que haya alguno de más.
 
 ${bold('PROBLEMAS / CONTRIBUIR')}:
-Ante cualquier bug que encuentren me avisan por Discord (${inlineCode('bnja#3809')}) o suben el [issue al repo de GH](https://github.com/grbenjamin/facubot/issues).
+Ante cualquier bug que encuentren me avisan por Discord (${inlineCode('bnja#5809')}) o suben el [issue al repo de GH](https://github.com/grbenjamin/facubot/issues).
 Si quieren contribuir al código pueden hacer un PR al repositorio: (https://github.com/grbenjamin/facubot). Gracias :)
 `
 
