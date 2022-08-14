@@ -3,6 +3,8 @@ Bot para el discord de la facultad. Utilizamos el mismo para resolver un problem
 Cada usuario del servidor puede agregar y pedir estos recursos. Todos los datos se guardan en SQLite, que nos brinda libertad a la hora de hacer queries o guardar datos. \
 De esta manera evitamos el trabajo de preguntar, enviar y buscar archivos y lo automatizamos.
 
+*Edit 14/08/22*: ahora usamos PostgreSQL para el entorno de prod, pero se puede seguir usando SQLite para dev.
+
 ## Cómo correrlo
 Con Docker:
 ```
@@ -22,13 +24,17 @@ Para que el bot loguee correctamente se debe crear un archivo `config.json` espe
 - [x] Agregar `/parcial` y `/final`
 - [x] Agregar `/registrar_parcial` y `/registrar_final`
 - [ ] Agregar funcionalidad de resúmenes -> `/resumen` y `/registrar_resumen`
+- - [ ] Buscado específico de temas: `/resumen [materia] [tema (opcional)]`
 - [x] Mostrar todos los finales y examenes al hacer una query
 - - ~~[ ] Interacción con el usuario con botones~~
+- [ ] Agregar buscado por acrónimos comunes para materias (IPI, PI, IO, IPOO, POO...)
 
 ## Funcionalidades
 Se cuenta con diferentes comandos
-- `/parcial [materia]`: te devuelve un parcial al azar de la materia especificada.
-- `/final [materia] [año (opcional)]`: te devuelve un final al azar de la materia especificada, o uno del año dado.
+- `/parcial [materia]`: te devuelve **un** parcial al azar de la materia especificada.
+- `/final [materia] [año (opcional)]`: te devuelve **un** final al azar de la materia especificada, o uno del año dado.
+- `/parciales [materia]`: te devuelve **todos** los parciales encontrados de la materia especificada.
+- `/finales [materia] [año (opcional)]`: te devuelve **todos** los finales encontrados de la materia especificada, o todos del año dado.
 - `/registrar_parcial [materia] [archivo]`: registra un parcial en la base de datos.
 - `/registrar_final [materia] [archivo] [año (opcional)]`: registra un final en la base de datos.
 
