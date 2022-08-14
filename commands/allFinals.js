@@ -71,7 +71,7 @@ module.exports = {
                 
             console.log(`${logInfo} - Successfully sent ${finals.length} finals`);
         } catch(error) {
-            console.error(`${logError} - Info: ${error}, command: /finales`);
+            console.error(`${logError} - Info: '${error}', command: /finales`);
             interaction.reply({ content: `Hubo un error al buscar los finales, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },

@@ -1,6 +1,12 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
-const { clientId, guildId, token } = require('./config.json');
+let { clientId, guildId, token } = require('./config.json');
+
+if (process.env.DB_ENVIRONMENT) {
+	clientId = process.env.DISCORD_CLIENT_ID;
+	guildId = process.env.DISCORD_GUILD_ID;
+	token = process.env.DISCORD_TOKEN;
+}
 
 const rest = new REST({ version: '10' }).setToken(token);
 

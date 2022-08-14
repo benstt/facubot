@@ -41,7 +41,7 @@ module.exports = {
             });
             console.log(`${logInfo} - Successfully sent exam`);
         } catch(error) {
-            console.error(`${logError} - Info: ${error}, command: /parcial`);
+            console.error(`${logError} - Info: '${error}', command: /parcial`);
             interaction.reply({ content: `Hubo un error al buscar un parcial, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },

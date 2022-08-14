@@ -69,7 +69,7 @@ module.exports = {
     
             registerExam(subject, attachedURL, date, interaction);
         } catch (error) {
-            console.error(`${logError} - Info: ${error}`);
+            console.error(`${logError} - Info: '${error}'`);
             throw InvalidFieldError(); 
         }
     },

@@ -2,9 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Sequelize = require('sequelize');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const { token } = require('./config.json');
 const { logInfo } = require('./common.js');
 const subjectsData = require('./subjects.json');
+let { token } = require('./config.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -20,6 +20,8 @@ if (process.env.DB_ENVIRONMENT) {
             }
           }
     });
+
+    token = process.env.DISCORD_TOKEN;
 } else {
     sequelize = new Sequelize('database', 'user', 'password', {
         host: 'localhost',

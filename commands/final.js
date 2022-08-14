@@ -78,8 +78,8 @@ module.exports = {
                 
             console.log(`${logInfo} - Successfully sent final`);
         } catch(error) {
-            console.error(`${logError} - Info: ${error}, command: /final`);
-            interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: '${error}'`, ephemeral: true });
+            console.error(`${logError} - Info: '${error}', command: /final`);
+            interaction.reply({ content: `Hubo un error al buscar un final, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },
     getIndexOfFinalFromYear,

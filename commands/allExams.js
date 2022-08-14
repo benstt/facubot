@@ -42,7 +42,7 @@ module.exports = {
                 
             console.log(`${logInfo} - Successfully sent ${finals.length} exams`);
         } catch(error) {
-            console.error(`${logError} - Info: ${error}, command: /parciales`);
+            console.error(`${logError} - Info: '${error}', command: /parciales`);
             interaction.reply({ content: `Hubo un error al buscar los parciales, ${interaction.user}: ${error}`, ephemeral: true });
         }
     },
